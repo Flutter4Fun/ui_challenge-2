@@ -92,14 +92,14 @@ class SnappingListScrollPhysics extends ScrollPhysics {
 
   @override
   SnappingListScrollPhysics applyTo(ScrollPhysics ancestor) => SnappingListScrollPhysics(
-        parent: buildParent(ancestor),
-        itemWidth: itemWidth,
-      );
+    parent: buildParent(ancestor),
+    itemWidth: itemWidth,
+  );
 
   double _getItem(ScrollPosition position) => (position.pixels) / itemWidth;
 
   double _getPixels(ScrollPosition position, double item) =>
-      math.min(item * itemWidth, position.maxScrollExtent);
+    math.min(item * itemWidth, position.maxScrollExtent);
 
   double _getTargetPixels(ScrollPosition position, Tolerance tolerance, double velocity) {
     double item = _getItem(position);
@@ -116,14 +116,14 @@ class SnappingListScrollPhysics extends ScrollPhysics {
     // If we're out of range and not headed back in range, defer to the parent
     // ballistics, which should put us back in range at a page boundary.
     if ((velocity <= 0.0 && position.pixels <= position.minScrollExtent) ||
-        (velocity >= 0.0 && position.pixels >= position.maxScrollExtent)) {
+      (velocity >= 0.0 && position.pixels >= position.maxScrollExtent)) {
       return super.createBallisticSimulation(position, velocity);
     }
     final Tolerance tolerance = this.tolerance;
     final double target = _getTargetPixels(position, tolerance, velocity);
     if (target != position.pixels) {
       return ScrollSpringSimulation(spring, position.pixels, target, velocity,
-          tolerance: tolerance);
+        tolerance: tolerance);
     }
     return null;
   }

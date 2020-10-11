@@ -1,151 +1,144 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
+import 'package:ui_challenge_2/my_bottom_navigation.dart';
 
 main() => runApp(MaterialApp(home: MyHomePage()));
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  ScrollController _controller;
+  int firstItem = 0;
+  final double itemWidth = 128;
+
+  final ValueNotifier<double> _offsett = ValueNotifier<double>(0.0);
+
+  double offset = 0;
+
+  @override
+  void initState() {
+    _controller = new ScrollController();
+    _controller.addListener(() {
+      setState(() {
+        offset = _controller.position.pixels / itemWidth;
+        firstItem = _controller.position.pixels ~/ itemWidth;
+      });
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Flutter4Fun.com'),
+        title: Text('Carousel in vertical scrollable'),
       ),
-      body: Align(
-        alignment: Alignment.bottomCenter,
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 100.0),
-          child: MyBottomNavigation(),
+      bottomNavigationBar: MyBottomNavigation(
+        selected: 1,
+        items: [
+          Icon(Icons.home, color: Colors.white,),
+          Icon(Icons.home, color: Colors.white,),
+          Icon(Icons.home, color: Colors.white,),
+          Icon(Icons.home, color: Colors.white,),
+          Icon(Icons.home, color: Colors.white,),
+        ],
+      ),
+      body: Center(
+        child: SizedBox(
+          // you may want to use an aspect ratio here for tablet support
+          height: 200.0,
+          child: ListView.builder(
+            controller: _controller,
+            physics: SnappingListScrollPhysics(itemWidth: itemWidth),
+            scrollDirection: Axis.horizontal,
+            itemBuilder: (context, i) {
+              double othersScale = 0.8;
+              double scale = ((1 - math.min((i - offset).abs(), 1.0)) * (1 - othersScale)) + othersScale;
+              print('i: $i, scale: $scale');
+              return Transform.scale(
+                scale: scale,
+                child: _buildCarouselItem(context, 0, i),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCarouselItem(BuildContext context, int carouselIndex, int itemIndex) {
+    return Container(
+      width: 120,
+      height: 200,
+      margin: EdgeInsets.symmetric(horizontal: 4.0),
+      decoration: BoxDecoration(
+        color: Colors.purple,
+        borderRadius: BorderRadius.all(Radius.circular(4.0)),
+      ),
+      child: Center(
+        child: Text(
+          '$itemIndex',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 22,
+          ),
         ),
       ),
     );
   }
 }
 
-class MyBottomNavigation extends StatelessWidget {
-  final double fabSize = 62;
-  final double navHeight = 68;
-  final double fabMargin = 8;
+class SnappingListScrollPhysics extends ScrollPhysics {
+  final double itemWidth;
 
-  final int itemsCount = 5;
-
-  const MyBottomNavigation({
-    Key key,
-  }) : super(key: key);
+  const SnappingListScrollPhysics({
+    @required this.itemWidth,
+    ScrollPhysics parent,
+  }) : super(parent: parent);
 
   @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: navHeight + fabSize / 2,
-      child: Stack(
-        children: [
-          CustomPaint(
-            painter: _MyBottomNavigationCustomPainter(0.5, fabSize, fabMargin),
-            size: Size(
-              double.infinity,
-              navHeight + fabSize / 2,
-            ),
-          ),
-//          Align(
-//            alignment: Alignment.bottomCenter,
-//            child: Container(
-//              height: navHeight,
-//              child: Row(
-//                mainAxisSize: MainAxisSize.max,
-//                mainAxisAlignment: MainAxisAlignment.spaceAround,
-//                children: [
-//                  Icon(Icons.map, color: Colors.white,),
-//                  Icon(Icons.map, color: Colors.white,),
-//                  Icon(Icons.map, color: Colors.white,),
-//                  Icon(Icons.map, color: Colors.white,),
-//                  Icon(Icons.map, color: Colors.white,),
-//                ],
-//              ),
-//            ),
-//          ),
-        ],
-      ),
-    );
-  }
-}
+  SnappingListScrollPhysics applyTo(ScrollPhysics ancestor) => SnappingListScrollPhysics(
+    parent: buildParent(ancestor),
+    itemWidth: itemWidth,
+  );
 
-class _MyBottomNavigationCustomPainter extends CustomPainter {
-  final double targetXPercent;
-  final double fabSize;
-  final double fabMargin;
+  double _getItem(ScrollPosition position) => (position.pixels) / itemWidth;
 
-  _MyBottomNavigationCustomPainter(
-    this.targetXPercent,
-    this.fabSize,
-    this.fabMargin,
-    );
+  double _getPixels(ScrollPosition position, double item) =>
+    math.min(item * itemWidth, position.maxScrollExtent);
 
-  @override
-  void paint(Canvas canvas, Size size) {
-    double holeWidth = 100;
-    double holeWidthThird = (holeWidth / 3) * 2;
-    double holeHeight = fabSize + fabMargin;
-
-    double top = fabSize / 2;
-
-    Path p = new Path();
-
-    final targetX = size.width * targetXPercent;
-
-    p.moveTo(0, top);
-
-    final point1 = Offset(targetX - holeWidthThird, top);
-    p.lineTo(point1.dx, point1.dy);
-
-    final point2 = Offset(targetX, holeHeight);
-
-    final controlPoint1 = Offset(point1.dx + 25, top);
-    final controlPoint2 = Offset(point1.dx + 30, holeHeight);
-
-    p.cubicTo(
-      controlPoint1.dx,
-      controlPoint1.dy,
-      controlPoint2.dx,
-      controlPoint2.dy,
-      point2.dx,
-      point2.dy,
-    );
-
-    final point3 = Offset(targetX + holeWidthThird, top);
-    final controlPoint3 = Offset(point3.dx - 30, holeHeight);
-    final controlPoint4 = Offset(point3.dx - 25, top);
-
-    p.cubicTo(
-      controlPoint3.dx,
-      controlPoint3.dy,
-      controlPoint4.dx,
-      controlPoint4.dy,
-      point3.dx,
-      point3.dy,
-    );
-
-    p.lineTo(size.width, top);
-    p.lineTo(size.width, size.height);
-    p.lineTo(0, size.height);
-    p.lineTo(0, top);
-
-    canvas.clipRect(Rect.fromLTWH(0, 0, size.width, size.height));
-
-    canvas.drawPath(
-      p,
-      Paint()
-        ..color = Colors.black
-        ..style = PaintingStyle.fill);
-
-    canvas.drawCircle(
-      Offset(targetX, fabSize / 2),
-      fabSize / 2,
-      Paint()..color = Colors.black);
-  }
-
-  void drawPoint(Canvas canvas, Offset point) {
-    canvas.drawCircle(point, 3, Paint()..color = Colors.red);
+  double _getTargetPixels(ScrollPosition position, Tolerance tolerance, double velocity) {
+    double item = _getItem(position);
+    if (velocity < -tolerance.velocity) {
+      item -= 0.5;
+    } else if (velocity > tolerance.velocity) {
+      item += 0.5;
+    }
+    return _getPixels(position, item.roundToDouble());
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) => true;
+  Simulation createBallisticSimulation(ScrollMetrics position, double velocity) {
+    // If we're out of range and not headed back in range, defer to the parent
+    // ballistics, which should put us back in range at a page boundary.
+    if ((velocity <= 0.0 && position.pixels <= position.minScrollExtent) ||
+      (velocity >= 0.0 && position.pixels >= position.maxScrollExtent)) {
+      return super.createBallisticSimulation(position, velocity);
+    }
+    final Tolerance tolerance = this.tolerance;
+    final double target = _getTargetPixels(position, tolerance, velocity);
+    if (target != position.pixels) {
+      return ScrollSpringSimulation(spring, position.pixels, target, velocity,
+        tolerance: tolerance);
+    }
+    return null;
+  }
+
+  @override
+  bool get allowImplicitScrolling => false;
 }

@@ -1,40 +1,87 @@
 import 'package:flutter/material.dart';
 
-class MyBottomNavigation extends StatelessWidget {
-  final double fabSize = 62;
-  final double navHeight = 68;
-  final double fabMargin = 8;
+class MyBottomNavigation extends ImplicitlyAnimatedWidget {
+  final List<Widget> items;
+  final double fabSize;
+  final double navHeight;
+  final double fabMargin;
+  final double iconSize;
+  final int selected;
 
   const MyBottomNavigation({
     Key key,
-  }) : super(key: key);
+    @required this.items,
+    this.fabSize = 62,
+    this.navHeight = 68,
+    this.fabMargin = 8,
+    this.iconSize = 24,
+    this.selected = 0,
+  }) : super(key: key, duration: const Duration(milliseconds: 300));
+
+  @override
+  _MyBottomNavigationState createState() => _MyBottomNavigationState();
+}
+
+class _MyBottomNavigationState extends AnimatedWidgetBaseState<MyBottomNavigation> {
+  Tween<double> _selectedPercentTween;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: navHeight + fabSize / 2,
+      height: widget.navHeight + widget.fabSize / 2,
       child: Stack(
         children: [
           CustomPaint(
-            painter: _MyBottomNavigationCustomPainter(0.5, fabSize, fabMargin),
+            painter: _MyBottomNavigationCustomPainter(
+              _selectedPercentTween.evaluate(animation),
+              widget.fabSize,
+              widget.fabMargin,
+            ),
             size: Size(
               double.infinity,
-              navHeight + fabSize / 2,
+              widget.navHeight + widget.fabSize / 2,
             ),
           ),
           Align(
-            alignment: Alignment.topCenter,
-            child: SizedBox(
-              width: fabSize,
-              height: fabSize,
-              child: FloatingActionButton(
-                onPressed: () {},
-                backgroundColor: Colors.black,
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              height: widget.navHeight,
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: widget.items.asMap().entries.map((entry) {
+                  final pos = entry.key;
+                  final iconWidget = entry.value;
+                  return Expanded(
+                    child: InkWell(
+                      onTap: () {},
+                      child: Transform.translate(
+                        offset: Offset(0, pos == widget.selected ? - (widget.fabSize / 2) - (widget.fabMargin / 2) : 0),
+                        child: iconWidget,
+                      ),
+                    ),
+                  );
+                }).toList(),
               ),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  @override
+  void forEachTween(visitor) {
+    double itemSpace = 1 / widget.items.length;
+    double selectedPercent = (itemSpace * widget.selected) + (itemSpace / 2);
+
+    _selectedPercentTween = visitor(
+      _selectedPercentTween,
+      selectedPercent,
+        (dynamic value) => Tween<double>(
+        begin: value,
       ),
     );
   }
@@ -49,7 +96,7 @@ class _MyBottomNavigationCustomPainter extends CustomPainter {
     this.targetXPercent,
     this.fabSize,
     this.fabMargin,
-  );
+    );
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -103,10 +150,12 @@ class _MyBottomNavigationCustomPainter extends CustomPainter {
     canvas.clipRect(Rect.fromLTWH(0, 0, size.width, size.height));
 
     canvas.drawPath(
-        p,
-        Paint()
-          ..color = Colors.black
-          ..style = PaintingStyle.fill);
+      p,
+      Paint()
+        ..color = Colors.black
+        ..style = PaintingStyle.fill);
+
+    canvas.drawCircle(Offset(targetX, fabSize / 2), fabSize / 2, Paint()..color = Colors.black);
   }
 
   void drawPoint(Canvas canvas, Offset point) {

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
-
 import 'horizontal_snapping_list.dart';
 
 main() => runApp(MaterialApp(home: MyHomePage()));

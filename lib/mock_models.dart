@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ui_challenge_2/game_item.dart';
 
 import 'player_item.dart';
 
@@ -40,4 +41,35 @@ List<PlayerModel> players = [
   player1,
   player2,
   player3,
+];
+
+final game1 = GameModel(
+  image: 'https://img.techpowerup.org/201026/game1686.png',
+  title: 'Road Fight',
+  subtitle: 'Shooting Cars',
+);
+
+final game2 = GameModel(
+  image: 'https://img.techpowerup.org/201026/game2907.png',
+  title: 'Vikings',
+  subtitle: 'Sons of Ragnar',
+);
+
+List<GameModel> games = [
+  game1,
+  game2,
+  game1,
+  game2,
+  game1,
+  game2,
+  game1,
+  game2,
+  game1,
+  game2,
+  game1,
+  game2,
+  game1,
+  game2,
+  game1,
+  game2,
 ];

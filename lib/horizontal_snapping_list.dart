@@ -41,6 +41,7 @@ class _HorizontalSnappingListState extends State<HorizontalSnappingList> {
     return SizedBox(
       height: widget.listHeight,
       child: ListView.builder(
+        padding: EdgeInsets.only(left: 16),
         controller: _scrollController,
         scrollDirection: Axis.horizontal,
         physics: SnappingListScrollPhysic(

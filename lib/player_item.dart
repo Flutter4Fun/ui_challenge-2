@@ -1,18 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:ui_challenge_2/sizes.dart';
 
-class PlayerItem extends StatelessWidget {
+class PlayerModel {
   final Color bgColor;
   final String image, name, description;
   final bool isFavorite;
+  final double rank;
+  final double imageScale;
 
-  const PlayerItem({
-    Key key,
+  PlayerModel({
     @required this.bgColor,
     @required this.image,
     @required this.name,
     @required this.description,
     @required this.isFavorite,
+    @required this.rank,
+    this.imageScale = 1.0,
+  });
+}
+
+class PlayerItemWidget extends StatelessWidget {
+  final PlayerModel playerModel;
+
+  const PlayerItemWidget({
+    Key key,
+    @required this.playerModel,
   }) : super(key: key);
 
   @override
@@ -26,7 +38,7 @@ class PlayerItem extends StatelessWidget {
             alignment: Alignment.bottomCenter,
             child: Image.network(
               'https://img.techpowerup.org/201025/items-bg.png',
-              color: bgColor,
+              color: playerModel.bgColor,
             ),
           ),
           Align(
@@ -47,8 +59,8 @@ class PlayerItem extends StatelessWidget {
                 height: 18,
               ),
               Image.network(
-                image,
-                width: itemWidth * 0.85,
+                playerModel.image,
+                width: itemWidth * 0.85 * playerModel.imageScale,
               ),
               SizedBox(
                 height: 18,
@@ -60,7 +72,7 @@ class PlayerItem extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(left: 8.0),
                     child: Text(
-                      name,
+                      playerModel.name,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18,
@@ -77,7 +89,7 @@ class PlayerItem extends StatelessWidget {
                         child: Padding(
                           padding: const EdgeInsets.only(left: 8.0),
                           child: Text(
-                            description,
+                            playerModel.description,
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 12,
@@ -94,9 +106,11 @@ class PlayerItem extends StatelessWidget {
                             borderRadius: BorderRadius.all(Radius.circular(5))),
                         child: Center(
                           child: Text(
-                            '4.9',
+                            playerModel.rank.toStringAsFixed(1),
                             style: TextStyle(
-                                color: bgColor, fontWeight: FontWeight.bold, fontSize: 12),
+                                color: playerModel.bgColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12),
                           ),
                         ),
                       )

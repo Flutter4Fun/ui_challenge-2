@@ -21,17 +21,21 @@ class PlayerModel {
 
 class PlayerItemWidget extends StatelessWidget {
   final PlayerModel playerModel;
+  final double height;
+  final double width;
 
   const PlayerItemWidget({
     Key key,
     @required this.playerModel,
+    @required this.height,
+    @required this.width,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: itemWidth,
-      height: itemHeight,
+      width: width,
+      height: height,
       child: Stack(
         children: [
           Align(
@@ -56,15 +60,13 @@ class PlayerItemWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               SizedBox(
-                height: 18,
+                height: 14,
               ),
               Image.network(
                 playerModel.image,
-                width: itemWidth * 0.85 * playerModel.imageScale,
+                width: width * 0.8 * playerModel.imageScale,
               ),
-              SizedBox(
-                height: 18,
-              ),
+              Expanded(child: Container()),
               Column(
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -117,7 +119,8 @@ class PlayerItemWidget extends StatelessWidget {
                     ],
                   )
                 ],
-              )
+              ),
+              SizedBox(height: 22,)
             ],
           )
         ],

@@ -37,7 +37,7 @@ class GameItemWidget extends StatelessWidget {
             fit: BoxFit.fitHeight,
           ),
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(14.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -46,7 +46,7 @@ class GameItemWidget extends StatelessWidget {
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontSize: 18,
+                    fontSize: 16,
                   ),
                 ),
                 SizedBox(
@@ -56,7 +56,7 @@ class GameItemWidget extends StatelessWidget {
                   gameModel.subtitle,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 14,
+                    fontSize: 12,
                   ),
                 ),
               ],

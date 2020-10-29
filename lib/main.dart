@@ -7,48 +7,41 @@ import 'heading_section.dart';
 import 'popular_games_section.dart';
 import 'recommended_games_section.dart';
 
-main() => runApp(MaterialApp(home: MyHomePage()));
+main() => runApp(MaterialApp(home: MainPage()));
 
-class MyHomePage extends StatelessWidget {
+class MainPage extends StatefulWidget {
+  @override
+  _MainPageState createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> {
+
+  int navPos = 2;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
-          ListView(
+          IndexedStack(
             children: [
-              SafeArea(child: HeadingSection()),
-              StoriesSection(),
-              SizedBox(
-                height: 22,
-              ),
-              PopularGamesSection(),
-              RecommendedGamesSection(),
-              NewGamesSection(),
-              SizedBox(
-                height: 120,
-              ),
+              TextScreen(text: "Search"),
+              TextScreen(text: "Favorites"),
+              HomeScreen(),
+              TextScreen(text: "Notifications"),
+              TextScreen(text: "Settings"),
             ],
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              height: 60,
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.white,
-                    blurRadius: 30,
-                    spreadRadius: 40
-                  )
-                ]
-              ),
-            ),
+            index: navPos,
           ),
           Align(
             alignment: Alignment.bottomCenter,
             child: CurvedBottomNavigation(
-              selected: 2,
+              onItemClick: (pos) {
+                setState(() {
+                  navPos = pos;
+                });
+              },
+              selected: navPos,
               items: [
                 Icon(Icons.search, color: Colors.white),
                 Icon(Icons.star, color: Colors.white),
@@ -59,6 +52,59 @@ class MyHomePage extends StatelessWidget {
             ),
           )
         ],
+      ),
+    );
+  }
+}
+
+class HomeScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        ListView(
+          children: [
+            SafeArea(child: HeadingSection()),
+            StoriesSection(),
+            SizedBox(
+              height: 22,
+            ),
+            PopularGamesSection(),
+            RecommendedGamesSection(),
+            NewGamesSection(),
+            SizedBox(
+              height: 120,
+            ),
+          ],
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Container(
+            height: 60,
+            decoration: BoxDecoration(
+                boxShadow: [BoxShadow(color: Colors.white, blurRadius: 30, spreadRadius: 40)]),
+          ),
+        )
+      ],
+    );
+  }
+}
+
+class TextScreen extends StatelessWidget {
+  final String text;
+
+  const TextScreen({Key key, this.text}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(
+        text,
+        style: TextStyle(
+          color: Colors.black,
+          fontWeight: FontWeight.bold,
+          fontSize: 22,
+        ),
       ),
     );
   }

@@ -1,14 +1,19 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
-class MyBottomNavigation extends ImplicitlyAnimatedWidget {
+class CurvedBottomNavigation extends ImplicitlyAnimatedWidget {
   final List<Widget> items;
   final double fabSize;
   final double navHeight;
   final double fabMargin;
   final double iconSize;
   final int selected;
+  final Color bgColor;
+  final fabBgColor;
+  final Function(int) onItemClick;
 
-  const MyBottomNavigation({
+  const CurvedBottomNavigation({
     Key key,
     @required this.items,
     this.fabSize = 62,
@@ -16,20 +21,32 @@ class MyBottomNavigation extends ImplicitlyAnimatedWidget {
     this.fabMargin = 8,
     this.iconSize = 24,
     this.selected = 0,
+    this.bgColor = Colors.black,
+    this.fabBgColor = Colors.black,
+    this.onItemClick,
   }) : super(key: key, duration: const Duration(milliseconds: 300));
 
   @override
   _MyBottomNavigationState createState() => _MyBottomNavigationState();
 }
 
-class _MyBottomNavigationState extends AnimatedWidgetBaseState<MyBottomNavigation> {
+class _MyBottomNavigationState extends AnimatedWidgetBaseState<CurvedBottomNavigation> {
+  List<Tween<double>> _itemsTranslationY;
   Tween<double> _selectedPercentTween;
 
   @override
+  void initState() {
+    _itemsTranslationY = List.generate(widget.items.length, (index) => null);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final double additionalBottomPadding = math.max(MediaQuery.of(context).padding.bottom, 0.0);
+
     return SizedBox(
       width: double.infinity,
-      height: widget.navHeight + widget.fabSize / 2,
+      height: widget.navHeight + (widget.fabSize / 2) + additionalBottomPadding,
       child: Stack(
         children: [
           CustomPaint(
@@ -37,16 +54,20 @@ class _MyBottomNavigationState extends AnimatedWidgetBaseState<MyBottomNavigatio
               _selectedPercentTween.evaluate(animation),
               widget.fabSize,
               widget.fabMargin,
+              additionalBottomPadding,
+              widget.bgColor,
+              widget.fabBgColor,
             ),
             size: Size(
               double.infinity,
-              widget.navHeight + widget.fabSize / 2,
+              widget.navHeight + (widget.fabSize / 2) + additionalBottomPadding,
             ),
           ),
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
               height: widget.navHeight,
+              margin: EdgeInsets.only(bottom: additionalBottomPadding),
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -56,9 +77,13 @@ class _MyBottomNavigationState extends AnimatedWidgetBaseState<MyBottomNavigatio
                   final iconWidget = entry.value;
                   return Expanded(
                     child: InkWell(
-                      onTap: () {},
+                      splashColor: Colors.white,
+                      highlightColor: Colors.white,
+                      onTap: () {
+                        widget.onItemClick(pos);
+                      },
                       child: Transform.translate(
-                        offset: Offset(0, pos == widget.selected ? - (widget.fabSize / 2) - (widget.fabMargin / 2) : 0),
+                        offset: Offset(0, _itemsTranslationY[pos].evaluate(animation)),
                         child: iconWidget,
                       ),
                     ),
@@ -80,10 +105,21 @@ class _MyBottomNavigationState extends AnimatedWidgetBaseState<MyBottomNavigatio
     _selectedPercentTween = visitor(
       _selectedPercentTween,
       selectedPercent,
-        (dynamic value) => Tween<double>(
+          (dynamic value) => Tween<double>(
         begin: value,
       ),
     );
+
+    for (int i = 0; i < _itemsTranslationY.length; i++) {
+      bool isSelected = widget.selected == i;
+      _itemsTranslationY[i] = visitor(
+        _itemsTranslationY[i],
+        isSelected ? -(widget.fabSize / 2) - (widget.fabMargin / 2) : 0.0,
+            (dynamic value) => Tween<double>(
+          begin: value,
+        ),
+      );
+    }
   }
 }
 
@@ -91,12 +127,27 @@ class _MyBottomNavigationCustomPainter extends CustomPainter {
   final double targetXPercent;
   final double fabSize;
   final double fabMargin;
+  final double additionalBottomPadding;
+  final Color bgColor;
+  final Color fabBgColor;
+  final Paint bgPaint;
+  final Paint fabPaint;
 
   _MyBottomNavigationCustomPainter(
-    this.targetXPercent,
-    this.fabSize,
-    this.fabMargin,
-    );
+      this.targetXPercent,
+      this.fabSize,
+      this.fabMargin,
+      this.additionalBottomPadding,
+      this.bgColor,
+      this.fabBgColor,
+      )   : bgPaint = Paint()
+    ..isAntiAlias = true
+    ..color = bgColor
+    ..style = PaintingStyle.fill,
+        fabPaint = Paint()
+          ..isAntiAlias = true
+          ..color = fabBgColor
+          ..style = PaintingStyle.fill;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -106,21 +157,21 @@ class _MyBottomNavigationCustomPainter extends CustomPainter {
 
     double top = fabSize / 2;
 
-    Path p = new Path();
+    Path bgPath = new Path();
 
     final targetX = size.width * targetXPercent;
 
-    p.moveTo(0, top);
+    bgPath.moveTo(0, top);
 
     final point1 = Offset(targetX - holeWidthThird, top);
-    p.lineTo(point1.dx, point1.dy);
+    bgPath.lineTo(point1.dx, point1.dy);
 
     final point2 = Offset(targetX, holeHeight);
 
     final controlPoint1 = Offset(point1.dx + 25, top);
     final controlPoint2 = Offset(point1.dx + 30, holeHeight);
 
-    p.cubicTo(
+    bgPath.cubicTo(
       controlPoint1.dx,
       controlPoint1.dy,
       controlPoint2.dx,
@@ -133,7 +184,7 @@ class _MyBottomNavigationCustomPainter extends CustomPainter {
     final controlPoint3 = Offset(point3.dx - 30, holeHeight);
     final controlPoint4 = Offset(point3.dx - 25, top);
 
-    p.cubicTo(
+    bgPath.cubicTo(
       controlPoint3.dx,
       controlPoint3.dy,
       controlPoint4.dx,
@@ -142,26 +193,19 @@ class _MyBottomNavigationCustomPainter extends CustomPainter {
       point3.dy,
     );
 
-    p.lineTo(size.width, top);
-    p.lineTo(size.width, size.height);
-    p.lineTo(0, size.height);
-    p.lineTo(0, top);
+    bgPath.lineTo(size.width, top);
+    bgPath.lineTo(size.width, size.height);
+    bgPath.lineTo(0, size.height);
+    bgPath.lineTo(0, top);
 
     canvas.clipRect(Rect.fromLTWH(0, 0, size.width, size.height));
 
-    canvas.drawPath(
-      p,
-      Paint()
-        ..color = Colors.black
-        ..style = PaintingStyle.fill);
+    canvas.drawPath(bgPath, bgPaint);
 
-    canvas.drawCircle(Offset(targetX, fabSize / 2), fabSize / 2, Paint()..color = Colors.black);
-  }
-
-  void drawPoint(Canvas canvas, Offset point) {
-    canvas.drawCircle(point, 3, Paint()..color = Colors.red);
+    canvas.drawCircle(Offset(targetX, fabSize / 2), fabSize / 2, fabPaint);
   }
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => true;
+
 }

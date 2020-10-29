@@ -5,13 +5,13 @@ import 'game_item.dart';
 import 'horizontal_snapping_list.dart';
 
 final game1 = GameModel(
-  image: 'https://img.techpowerup.org/201029/game1.png',
+  image: 'assets/images/game1.png',
   title: 'Road Fight',
   subtitle: 'Shooting Cars',
 );
 
 final game2 = GameModel(
-  image: 'https://img.techpowerup.org/201029/game2.png',
+  image: 'assets/images/game2.png',
   title: 'Vikings',
   subtitle: 'Sons of Ragnar',
 );

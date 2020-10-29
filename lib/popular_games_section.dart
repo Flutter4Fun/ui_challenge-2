@@ -10,7 +10,7 @@ final itemWidth = itemHeight * 0.7;
 
 final player1 = PlayerModel(
   bgColor: Color(0xFF7AF2F3),
-  image: 'https://img.techpowerup.org/201025/player1.png',
+  image: 'assets/images/player1.png',
   name: 'Jetpack Joy',
   description: 'Action packed desi quiz Game',
   isFavorite: false,
@@ -19,7 +19,7 @@ final player1 = PlayerModel(
 
 final player2 = PlayerModel(
   bgColor: Color(0xFFFFC300),
-  image: 'https://img.techpowerup.org/201026/player2.png',
+  image: 'assets/images/player2.png',
   name: 'X Fighter',
   description: 'Battle Royale',
   isFavorite: true,
@@ -29,7 +29,7 @@ final player2 = PlayerModel(
 
 final player3 = PlayerModel(
   bgColor: Color(0xFFFF6D62),
-  image: 'https://img.techpowerup.org/201026/player3.png',
+  image: 'assets/images/player3.png',
   name: 'Ninja Race',
   description: 'Real time racing',
   isFavorite: false,

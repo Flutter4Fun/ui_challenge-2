@@ -60,7 +60,7 @@ class HeadingSection extends StatelessWidget {
                 ),
                 Align(
                   alignment: Alignment.center,
-                  child: Image.network("https://img.techpowerup.org/201029/profile.png"),
+                  child: Image.asset('assets/images/Profile.png'),
                 ),
                 Align(
                   alignment: Alignment.topRight,

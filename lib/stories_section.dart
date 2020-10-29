@@ -17,7 +17,7 @@ class UserStoryWidget extends StatelessWidget {
         child: CircleAvatar(
           radius: storyRadius,
           backgroundColor: Colors.grey,
-          backgroundImage: NetworkImage(url),
+          backgroundImage: AssetImage(url),
         ),
       ),
       dashes: 40,
@@ -29,14 +29,14 @@ class UserStoryWidget extends StatelessWidget {
 }
 
 List<String> users = [
-  "https://img.techpowerup.org/201029/user1.png",
-  "https://img.techpowerup.org/201029/user2.png",
-  "https://img.techpowerup.org/201029/user3.png",
-  "https://img.techpowerup.org/201029/user4.png",
-  "https://img.techpowerup.org/201029/user1.png",
-  "https://img.techpowerup.org/201029/user2.png",
-  "https://img.techpowerup.org/201029/user3.png",
-  "https://img.techpowerup.org/201029/user4.png",
+  "assets/images/User1.png",
+  "assets/images/User2.png",
+  "assets/images/User3.png",
+  "assets/images/User4.png",
+  "assets/images/User1.png",
+  "assets/images/User2.png",
+  "assets/images/User3.png",
+  "assets/images/User4.png",
 ];
 
 class StoriesSection extends StatelessWidget {
@@ -58,7 +58,7 @@ class StoriesSection extends StatelessWidget {
                 shape: BoxShape.circle,
                 color: Color(0xFF0B0A0A),
               ),
-              child: Image.network('https://img.techpowerup.org/201029/addstory.png'),
+              child: Image.asset('assets/images/AddStory.png'),
             );
           } else {
             widget = UserStoryWidget(users[i - 1]);

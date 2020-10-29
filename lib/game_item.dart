@@ -32,7 +32,7 @@ class GameItemWidget extends StatelessWidget {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          Image.network(
+          Image.asset(
             gameModel.image,
             fit: BoxFit.fitHeight,
           ),

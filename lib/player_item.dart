@@ -40,8 +40,8 @@ class PlayerItemWidget extends StatelessWidget {
         children: [
           Align(
             alignment: Alignment.bottomCenter,
-            child: Image.network(
-              'https://img.techpowerup.org/201025/items-bg.png',
+            child: Image.asset(
+              'assets/images/items_bg.png',
               color: playerModel.bgColor,
             ),
           ),
@@ -62,7 +62,7 @@ class PlayerItemWidget extends StatelessWidget {
               SizedBox(
                 height: 14,
               ),
-              Image.network(
+              Image.asset(
                 playerModel.image,
                 width: width * 0.8 * playerModel.imageScale,
               ),

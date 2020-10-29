@@ -44,13 +44,13 @@ List<PlayerModel> players = [
 ];
 
 final game1 = GameModel(
-  image: 'https://img.techpowerup.org/201026/game1686.png',
+  image: 'https://img.techpowerup.org/201029/game1.png',
   title: 'Road Fight',
   subtitle: 'Shooting Cars',
 );
 
 final game2 = GameModel(
-  image: 'https://img.techpowerup.org/201026/game2907.png',
+  image: 'https://img.techpowerup.org/201029/game2.png',
   title: 'Vikings',
   subtitle: 'Sons of Ragnar',
 );

@@ -43,6 +43,7 @@ class PlayerItemWidget extends StatelessWidget {
             child: Image.asset(
               'assets/images/items_bg.png',
               color: playerModel.bgColor,
+              package: 'ui_challenge_2',
             ),
           ),
           Align(
@@ -65,6 +66,7 @@ class PlayerItemWidget extends StatelessWidget {
               Image.asset(
                 playerModel.image,
                 width: width * 0.8 * playerModel.imageScale,
+                package: 'ui_challenge_2'
               ),
               Expanded(child: Container()),
               Column(
@@ -120,7 +122,9 @@ class PlayerItemWidget extends StatelessWidget {
                   )
                 ],
               ),
-              SizedBox(height: 22,)
+              SizedBox(
+                height: 22,
+              )
             ],
           )
         ],

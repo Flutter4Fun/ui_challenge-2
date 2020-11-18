@@ -60,7 +60,7 @@ class HeadingSection extends StatelessWidget {
                 ),
                 Align(
                   alignment: Alignment.center,
-                  child: Image.asset('assets/images/Profile.png'),
+                  child: Image.asset('assets/images/Profile.png', package: 'ui_challenge_2'),
                 ),
                 Align(
                   alignment: Alignment.topRight,

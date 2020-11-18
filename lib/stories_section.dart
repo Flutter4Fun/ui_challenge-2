@@ -17,7 +17,7 @@ class UserStoryWidget extends StatelessWidget {
         child: CircleAvatar(
           radius: storyRadius,
           backgroundColor: Colors.grey,
-          backgroundImage: AssetImage(url),
+          backgroundImage: AssetImage(url, package: 'ui_challenge_2'),
         ),
       ),
       dashes: 40,
@@ -58,7 +58,7 @@ class StoriesSection extends StatelessWidget {
                 shape: BoxShape.circle,
                 color: Color(0xFF0B0A0A),
               ),
-              child: Image.asset('assets/images/AddStory.png'),
+              child: Image.asset('assets/images/AddStory.png', package: 'ui_challenge_2'),
             );
           } else {
             widget = UserStoryWidget(users[i - 1]);

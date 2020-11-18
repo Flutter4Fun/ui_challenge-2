@@ -7,21 +7,19 @@ import 'heading_section.dart';
 import 'popular_games_section.dart';
 import 'recommended_games_section.dart';
 
-main() => runApp(MaterialApp(home: MainPage()));
-
-class MainPage extends StatefulWidget {
+class UiChallenge2 extends StatefulWidget {
   @override
-  _MainPageState createState() => _MainPageState();
+  _UiChallenge2State createState() => _UiChallenge2State();
 }
 
-class _MainPageState extends State<MainPage> {
+class _UiChallenge2State extends State<UiChallenge2> {
 
   int navPos = 2;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
+    return Material(
+      child: Stack(
         children: [
           IndexedStack(
             children: [

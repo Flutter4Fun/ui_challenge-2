@@ -35,6 +35,7 @@ class GameItemWidget extends StatelessWidget {
           Image.asset(
             gameModel.image,
             fit: BoxFit.fitHeight,
+            package: 'ui_challenge_2',
           ),
           Padding(
             padding: const EdgeInsets.all(14.0),

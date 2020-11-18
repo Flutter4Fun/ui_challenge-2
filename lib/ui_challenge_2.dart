@@ -1,3 +1,5 @@
+library ui_challenge_1;
+
 import 'package:curved_bottom_navigation/curved_bottom_navigation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
